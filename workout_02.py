@@ -1,9 +1,18 @@
 import streamlit as st
 import pandas as pd
 import time
+from datetime import datetime
 
 # Load the CSV file with the correct delimiter
 df = pd.read_csv("TREINO_BASICO_PICS_2.csv", delimiter=";")
+
+# Convert "INICIO" and "FIM" columns to datetime with the correct format
+df["INICIO"] = pd.to_datetime(df["INICIO"], format="%d/%m/%Y")
+df["FIM"] = pd.to_datetime(df["FIM"], format="%d/%m/%Y")
+
+# Calculate remaining days based on today's date
+today = datetime.today()
+remaining_days = (df["FIM"].min() - today).days  # Use min end date for the remaining time
 
 # Page configuration for a wide layout
 st.set_page_config(page_title="FITNESS PLANNER", layout="wide")
@@ -38,6 +47,9 @@ st.markdown(
 
 # Title Section
 st.markdown("<h4 style='color:yellow;'>Bem vindo ao FITAPP</h4>", unsafe_allow_html=True)
+
+# Sidebar for remaining time display
+st.sidebar.markdown(f"⏳ Dias restantes para o término: {remaining_days}")
 
 # Sidebar for Slicer
 st.sidebar.title("Selecione o exercício")
@@ -79,8 +91,6 @@ if not filtered_df.empty:
 
             # Display exercise timer button
             if st.button(f"Iniciar intervalo {row['EXERCICIO']}", key=f"start_button_{index}_{row['EXERCICIO']}"):
-                st.write(f"Iniciando {row['EXERCICIO']}...")
-
                 # Timer Logic for current round
                 for current_round in range(current_round + 1, rounds + 1):
                     st.session_state[f"round_{index}_{row['EXERCICIO']}"] = current_round
