@@ -49,7 +49,11 @@ st.markdown(
 st.markdown("<h4 style='color:yellow;'>Bem vindo ao FITAPP</h4>", unsafe_allow_html=True)
 
 # Sidebar for remaining time display
-st.sidebar.markdown(f"⏳ Dias restantes para o término: {remaining_days}")
+if remaining_days >0:
+    st.sidebar.markdown(f"⏳ {remaining_days} - Dia(s) para o término do treino")
+else:
+    st.sidebar.markdown(f"⏳ Treino encerrado, Trocar treino")   
+    
 
 # Sidebar for Slicer
 st.sidebar.title("Selecione o exercício")
