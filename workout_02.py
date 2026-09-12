@@ -109,7 +109,7 @@ if not filtered_df.empty:
                         progress_bar.progress((interval - seconds_left) / interval)
                         time.sleep(1)  # Delay for 1 second
 
-                    timer_display.text("End of berak!")
+                    timer_display.text("End of break!")
                     progress_bar.progress(1.0)
                     st.success(f"Exercise {current_round} Finished!")
 
