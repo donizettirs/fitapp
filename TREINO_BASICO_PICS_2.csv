@@ -1,5 +1,5 @@
 ﻿NOME;SENHA;SERIE;INICIO;FIM;DIA;GRUPO;EXERCICIO;REPETIÇOES;IMAGE
-JOAO;12345;1;1/1/2025;1/3/2025;Segunda;Treino A (peito e tríceps);Supino reto com barra;3 séries de 8-10 repetições;https://raw.githubusercontent.com/donizettirs/fitapp/refs/heads/main/pics/bench-press.png
+JOAO;12345;1;1/1/2025;1/3/2025;Segunda;Treino A (peito e tríceps);Barbell bench press;3 sets de 8-10 reps;https://raw.githubusercontent.com/donizettirs/fitapp/refs/heads/main/pics/bench-press.png
 JOAO;12345;1;1/1/2025;1/3/2025;Segunda;Treino A (peito e tríceps);Supino inclinado com halteres;3 séries de 10-12 repetições;https://github.com/donizettirs/fitapp/blob/main/pics/incline-dumbbell-bench-press.png?raw=true
 JOAO;12345;1;1/1/2025;1/3/2025;Segunda;Treino A (peito e tríceps);Crucifixo com halteres;3 séries de 12-15 repetições;https://github.com/donizettirs/fitapp/blob/main/pics/dumbbell-fly.png?raw=true
 JOAO;12345;1;1/1/2025;1/3/2025;Segunda;Treino A (peito e tríceps);Paralelas;3 séries de 10-12 repetições;https://github.com/donizettirs/fitapp/blob/main/pics/dips.png?raw=true
