@@ -63,19 +63,19 @@ st.markdown("<h4 style='color:yellow;'>Bem vindo ao FITAPP</h4>", unsafe_allow_h
 if remaining_days > 0:
     st.sidebar.markdown(f"⏳ {remaining_days} - Dia(s) para o término do treino")
 else:
-    st.sidebar.markdown(f"⏳ Treino encerrado, Trocar treino")
+    st.sidebar.markdown(f"⏳ Expired workout, update workout")
 
 
 # Sidebar for Slicer
-st.sidebar.title("Selecione o exercício")
+st.sidebar.title("Pick exercise")
 day_group = st.sidebar.selectbox("", options=df['GRUPO'].unique())
 
 # Sidebar Inputs for Timer
-rounds = st.sidebar.number_input("Número de séries:", min_value=1, value=3, step=1)
-interval = st.sidebar.number_input("Intervalo entre séries (em segundos):", min_value=10, value=30, step=5)
+rounds = st.sidebar.number_input("Sets:", min_value=1, value=3, step=1)
+interval = st.sidebar.number_input("Break between sets (in seconds):", min_value=10, value=30, step=5)
 
 # Title Section
-st.markdown("Selecione ao lado o dia e treino desejado.")
+st.markdown("🡸 Pick workout from the menu on the left..")
 st.markdown(f"<div style='font-size:22px;'>🏋️ {day_group}</div>", unsafe_allow_html=True)
 
 # Filter the DataFrame based on the selected day group
@@ -103,7 +103,7 @@ if not filtered_df.empty:
             current_round = st.session_state[f"round_{index}_{row['EXERCICIO']}"]
 
             # Display exercise timer button
-            if st.button(f"Iniciar intervalo {row['EXERCICIO']}", key=f"start_button_{index}_{row['EXERCICIO']}"):
+            if st.button(f"Start break {row['EXERCICIO']}", key=f"start_button_{index}_{row['EXERCICIO']}"):
                 # Timer Logic for current round
                 for current_round in range(current_round + 1, rounds + 1):
                     st.session_state[f"round_{index}_{row['EXERCICIO']}"] = current_round
