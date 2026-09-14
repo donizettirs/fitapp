@@ -15,9 +15,14 @@ today = datetime.today()
 remaining_days = (df["FIM"].min() - today).days  # Use min end date for the remaining time
 
 # Page configuration for a wide layout
-st.set_page_config(page_title="FITNESS PLANNER", layout="wide")
+# initial_sidebar_state="expanded" forces the sidebar open on load, including on mobile
+st.set_page_config(
+    page_title="FITNESS PLANNER",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Inject custom CSS for the background image, hide header and footer
+# Inject custom CSS for the background image, hide only the menu and footer (NOT the header)
 st.markdown(
     f"""
     <style>
@@ -32,9 +37,15 @@ st.markdown(
     h1, h2, h3, h4, h5, h6, p, div {{
         color: white;
     }}
-    /* Hide the Streamlit header */
-    header {{
+    /* Hide the hamburger menu (top-right "..." menu), but KEEP the header itself
+       so the sidebar expand/collapse arrow stays visible and tappable on mobile */
+    #MainMenu {{
         visibility: hidden;
+    }}
+    /* Make the header transparent instead of hidden, so its background
+       doesn't clash visually, but the collapse/expand arrow icon still works */
+    header {{
+        background: transparent;
     }}
     /* Hide the footer */
     footer {{
@@ -46,25 +57,25 @@ st.markdown(
 )
 
 # Title Section
-st.markdown("<h4 style='color:yellow;'>Welcome to FITAPP</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='color:yellow;'>Bem vindo ao FITAPP</h4>", unsafe_allow_html=True)
 
 # Sidebar for remaining time display
-if remaining_days >0:
-    st.sidebar.markdown(f"⏳ {remaining_days} - Days until workout end")
+if remaining_days > 0:
+    st.sidebar.markdown(f"⏳ {remaining_days} - Dia(s) para o término do treino")
 else:
-    st.sidebar.markdown(f"⏳ Workout expired, switch workout")   
-    
+    st.sidebar.markdown(f"⏳ Treino encerrado, Trocar treino")
+
 
 # Sidebar for Slicer
-st.sidebar.title("Select exercise") 
+st.sidebar.title("Selecione o exercício")
 day_group = st.sidebar.selectbox("", options=df['GRUPO'].unique())
 
 # Sidebar Inputs for Timer
-rounds = st.sidebar.number_input("Number of reps:", min_value=1, value=3, step=1)
-interval = st.sidebar.number_input("Time between series (in seconds):", min_value=10, value=30, step=5)
+rounds = st.sidebar.number_input("Número de séries:", min_value=1, value=3, step=1)
+interval = st.sidebar.number_input("Intervalo entre séries (em segundos):", min_value=10, value=30, step=5)
 
 # Title Section
-st.markdown("Select the day and workout")
+st.markdown("Selecione ao lado o dia e treino desejado.")
 st.markdown(f"<div style='font-size:22px;'>🏋️ {day_group}</div>", unsafe_allow_html=True)
 
 # Filter the DataFrame based on the selected day group
@@ -75,7 +86,7 @@ if not filtered_df.empty:
     for index, row in filtered_df.iterrows():
         # Create a 2-column layout
         col1, col2 = st.columns([1, 3])  # Adjust column widths as needed
-        
+
         # Display the image in the first column
         with col1:
             st.image(row['IMAGE'], width=400)  # Adjust the size of the image
@@ -84,7 +95,6 @@ if not filtered_df.empty:
         with col2:
             st.subheader(f"{row['EXERCICIO']}")
             st.markdown(f"🔢 &nbsp;  {row['REPETIÇOES']}")
-            
 
             # Timer Logic using session_state for round tracking
             if f"round_{index}_{row['EXERCICIO']}" not in st.session_state:
@@ -93,11 +103,11 @@ if not filtered_df.empty:
             current_round = st.session_state[f"round_{index}_{row['EXERCICIO']}"]
 
             # Display exercise timer button
-            if st.button(f"Start break for: {row['EXERCICIO']}", key=f"start_button_{index}_{row['EXERCICIO']}"):
+            if st.button(f"Iniciar intervalo {row['EXERCICIO']}", key=f"start_button_{index}_{row['EXERCICIO']}"):
                 # Timer Logic for current round
                 for current_round in range(current_round + 1, rounds + 1):
                     st.session_state[f"round_{index}_{row['EXERCICIO']}"] = current_round
-                    st.write(f"Sets {current_round} of {rounds}")
+                    st.write(f"Série {current_round} de {rounds}")
 
                     # Display countdown in a single line
                     timer_display = st.empty()  # Placeholder for countdown display
@@ -105,23 +115,23 @@ if not filtered_df.empty:
 
                     for seconds_left in range(interval, 0, -1):
                         mins, secs = divmod(seconds_left, 60)
-                        timer_display.text(f"Time left: {mins:02d}:{secs:02d}")
+                        timer_display.text(f"Tempo restante: {mins:02d}:{secs:02d}")
                         progress_bar.progress((interval - seconds_left) / interval)
                         time.sleep(1)  # Delay for 1 second
 
-                    timer_display.text("End of break!")
+                    timer_display.text("Intervalo concluído!")
                     progress_bar.progress(1.0)
-                    st.success(f"Exercise {current_round} Finished!")
+                    st.success(f"Série {current_round} concluída!")
 
                     # Pause before the next round
                     if current_round < rounds:
-                        st.write("Wait to start nex set.")
+                        st.write("Aguarde para iniciar a próxima série.")
                         st.session_state[f"round_{index}_{row['EXERCICIO']}"] = current_round
 
                         # Pause logic until user is ready for the next round
                         while st.session_state.get(f"round_{index}_{row['EXERCICIO']}") == current_round:
                             time.sleep(0.1)  # Prevent high CPU usage
-                        
+
                 st.balloons()
 
         # Add a horizontal line between exercises for better separation
