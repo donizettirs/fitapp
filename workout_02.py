@@ -57,7 +57,7 @@ st.markdown(
 )
 
 # Title Section
-st.markdown("<h4 style='color:yellow;'>Bem vindo ao FITAPP</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='color:yellow;'>WELCOME TO FITAPP</h4>", unsafe_allow_html=True)
 
 # Sidebar for remaining time display
 if remaining_days > 0:
